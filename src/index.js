@@ -1,7 +1,7 @@
 const core = require('@actions/core')
 const github = require('@actions/github')
 const fs = require('fs');
-const { context } = require('../dist')
+// const { context } = require('../dist')
 
 const main = async () => {
     const filePath = core.getInput('file_path', { required: true })
@@ -10,7 +10,7 @@ const main = async () => {
 
     const octokit = new github.getOctokit(token)
 
-    // const { owner, repo } = github.context.payload
+    const { owner, repo } = github.context.payload
 
     // console.log(github.context.payload);
 
@@ -28,9 +28,9 @@ const main = async () => {
         pull_number: prNumber,
     });
 
-    console.log(prData);
+    console.log({prData, pull_request, owner, repo});
 
-    const { pull_request } = github.payload;
+    const { pull_request } = github.context.payload
 
     await octokit.rest.issues.createComment({
         owner: 'sidharthbh8',

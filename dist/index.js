@@ -9612,14 +9612,6 @@ function wrappy (fn, cb) {
 
 /***/ }),
 
-/***/ 342:
-/***/ ((module) => {
-
-module.exports = eval("require")("../dist");
-
-
-/***/ }),
-
 /***/ 2877:
 /***/ ((module) => {
 
@@ -9800,7 +9792,7 @@ var __webpack_exports__ = {};
 const core = __nccwpck_require__(2186)
 const github = __nccwpck_require__(5438)
 const fs = __nccwpck_require__(7147);
-const { context } = __nccwpck_require__(342)
+// const { context } = require('../dist')
 
 const main = async () => {
     const filePath = core.getInput('file_path', { required: true })
@@ -9809,7 +9801,7 @@ const main = async () => {
 
     const octokit = new github.getOctokit(token)
 
-    // const { owner, repo } = github.context.payload
+    const { owner, repo } = github.context.payload
 
     // console.log(github.context.payload);
 
@@ -9827,9 +9819,9 @@ const main = async () => {
         pull_number: prNumber,
     });
 
-    console.log(prData);
+    console.log({prData, pull_request, owner, repo});
 
-    const { pull_request } = github.payload;
+    const { pull_request } = github.context.payload
 
     await octokit.rest.issues.createComment({
         owner: 'sidharthbh8',
