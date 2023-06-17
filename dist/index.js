@@ -9797,12 +9797,9 @@ const prNumber = core.getInput('pr_number', { required: true})
 const token = core.getInput('token', { required: true})
 
 const octokit = new github.getOctokit(token)
-
-const fileData = octokit.rest.pulls.listFiles({
-    owner,
-    repo,
-    pull_number,
-  });
+const { owner, repo } = github.context.payload
+console.log(github.context.payload);
+console.log({owner, repo});
 })();
 
 module.exports = __webpack_exports__;
