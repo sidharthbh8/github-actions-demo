@@ -10,9 +10,6 @@ const main = async () => {
 
     const octokit = new github.getOctokit(token)
 
-    const owner = github.payload.owner
-    const repo = github.payload.repo
-
     // console.log(github.context.payload);
 
     try {
@@ -30,8 +27,7 @@ const main = async () => {
     });
 
     const { pull_request } = github.context.payload
-
-    console.log({owner, repo});
+    
     console.log(prData.data);
     console.log(pull_request.number);
 
