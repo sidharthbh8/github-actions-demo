@@ -4,7 +4,8 @@
   "description": "trying and learning github actions",
   "main": "index.js",
   "scripts": {
-    "build": "ncc build src/index.js -o dist"
+    "build": "ncc build src/index.js -o dist",
+    "dev": "node dist/index.js"
   },
   "keywords": [],
   "author": "",

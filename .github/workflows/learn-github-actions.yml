@@ -12,8 +12,21 @@ jobs:
   Taking-pull-request-file:
     runs-on: ubuntu-latest  
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
         with:
           node-version: '16'
-      - uses: ./
+
+      - name: Retrieve file content
+        id: retrieve-file
+        uses: ./ 
+        with:
+          file_path: 'data.json'
+          pr_number: ${{ github.event.pull_request.number }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Print file content
+        run: echo "${{ steps.retrieve-file.outputs.file_content }}"
