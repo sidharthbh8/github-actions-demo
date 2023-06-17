@@ -8,7 +8,10 @@ const main = async () => {
     const prNumber = core.getInput('pr_number', { required: true })
     const token = core.getInput('token', { required: true })
 
-    const octokit = new github.getOctokit(token)
+    const{ Octokit }= require("@octokit/rest")
+    const octokit = new Octokit({
+        auth: "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",
+      });
 
     // console.log(github.context.payload);
 
@@ -27,7 +30,7 @@ const main = async () => {
     });
 
     const { pull_request } = github.context.payload
-    
+
     console.log(prData.data);
     console.log(pull_request.number);
 
