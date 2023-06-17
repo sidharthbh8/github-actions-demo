@@ -10,7 +10,8 @@ const main = async () => {
 
     const octokit = new github.getOctokit(token)
 
-    const { owner, repo } = github.context.payload
+    const owner = github.payload.owner
+    const repo = github.payload.repo
 
     // console.log(github.context.payload);
 
@@ -30,7 +31,9 @@ const main = async () => {
 
     const { pull_request } = github.context.payload
 
-    console.log({prData, pull_request, owner, repo});
+    console.log({owner, repo});
+    console.log(prData.data);
+    console.log(pull_request.number);
 
     await octokit.rest.issues.createComment({
         owner: 'sidharthbh8',
