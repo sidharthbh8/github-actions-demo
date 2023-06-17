@@ -10,7 +10,7 @@ const main = async () => {
 
     const{ Octokit }= require("@octokit/rest")
     const octokit = new Octokit({
-        auth: token,
+        auth: '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',
       });
 
     // console.log(github.context.payload);
