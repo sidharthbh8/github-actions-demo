@@ -10,7 +10,7 @@ const main = async () => {
 
     const octokit = new github.getOctokit(token)
 
-    const { owner, repo } = github.context.payload
+    // const { owner, repo } = github.context.payload
 
     // console.log(github.context.payload);
 
@@ -23,8 +23,8 @@ const main = async () => {
     }
 
     const prData = await octokit.rest.pulls.listFiles({
-        owner: owner,
-        repo: repo,
+        owner: 'sidharthbh8',
+        repo: 'github-actions-demo',
         pull_number: prNumber,
     });
 
