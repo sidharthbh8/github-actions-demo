@@ -9,6 +9,7 @@ const main = async () => {
     const token = core.getInput('token', { required: true })
 
     const octokit = new github.getOctokit(token)
+    
     const { owner, repo } = github.context.repo
 
     // console.log(github.context.payload);
@@ -17,12 +18,9 @@ const main = async () => {
         const fileContent = fs.readFileSync(filePath, 'utf8');
         core.setOutput('file_content', fileContent)
 
-        console.log(fileContent);
     } catch (e) {
         core.setFailed(e.message)
     }
-  
-    console.log('ABOVE FILE CONTENT BELOW IS PR DATA');
 
     const prData = await octokit.rest.pulls.listFiles({
         owner: owner,
@@ -31,7 +29,7 @@ const main = async () => {
     });
 
     console.log(prData);
-    
+
     await octokit.issues.createComment({
         ...context.repo,
         issue_number: prNumber,
