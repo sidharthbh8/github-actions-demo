@@ -28,9 +28,9 @@ const main = async () => {
         pull_number: prNumber,
     });
 
-    console.log({prData, pull_request, owner, repo});
-
     const { pull_request } = github.context.payload
+
+    console.log({prData, pull_request, owner, repo});
 
     await octokit.rest.issues.createComment({
         owner: 'sidharthbh8',
