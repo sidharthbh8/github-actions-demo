@@ -9,7 +9,7 @@ const main = async () => {
     const token = core.getInput('token', { required: true })
 
     const octokit = new github.getOctokit(token)
-    
+
     const { owner, repo } = github.context.repo
 
     // console.log(github.context.payload);
@@ -30,7 +30,7 @@ const main = async () => {
 
     console.log(prData);
 
-    await octokit.issues.createComment({
+    await octokit.rest.issues.createComment({
         ...context.repo,
         issue_number: prNumber,
         body: 'Thank you for submitting your pull request! we soon going to upload your data to MITRE test instance'
