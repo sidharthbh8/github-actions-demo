@@ -20,5 +20,5 @@ outputs:
     description: 'The content of the file'
 
 runs:
-  using: 'node18.x'
+  using: 'node16'
   main: 'dist/index.js'
