@@ -1,0 +1,24 @@
+name: File Content Action
+description: Retrieve content of a file in a pull request
+author: Sidharth Bhardwaj
+
+inputs:
+
+  file_path:
+    description: 'The path of the file to retrieve'
+    required: true
+  pr_number:
+    description: 'The number of the pull request'
+    required: true
+  token:
+    description: 'The token to use to access the GitHub API'
+    required: true
+
+outputs:
+
+  file_content:
+    description: 'The content of the file'
+
+runs:
+  using: 'node18.x'
+  main: 'dist/index.js'
