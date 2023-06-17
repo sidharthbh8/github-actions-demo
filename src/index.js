@@ -10,7 +10,7 @@ const { owner, repo } = github.context.payload
 console.log(github.context.payload);
 
 const fileData = octokit.rest.pulls.listFiles({
-    owner,
-    repo,
+    owner: owner,
+    repo: repo,
     pull_number: prNumber,
   });
