@@ -9809,7 +9809,7 @@ const main = async () => {
 
     const octokit = new github.getOctokit(token)
 
-    const { owner, repo } = github.context.payload
+    // const { owner, repo } = github.context.payload
 
     // console.log(github.context.payload);
 
@@ -9828,11 +9828,13 @@ const main = async () => {
     });
 
     console.log(prData);
+        
+    const { pull_request } = github.payload;
 
     await octokit.rest.issues.createComment({
-        owner,
-        repo,
-        issue_number: prNumber,
+        owner: 'sidharthbh8',
+        repo: 'github-actions-demo',
+        issue_number: pull_request.number,
         body: 'Thank you for submitting your pull request! we soon going to upload your data to MITRE test instance'
     })
 }
