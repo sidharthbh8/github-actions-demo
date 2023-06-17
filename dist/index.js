@@ -9830,7 +9830,8 @@ const main = async () => {
     console.log(prData);
 
     await octokit.rest.issues.createComment({
-        ...context.repo,
+        owner,
+        repo,
         issue_number: prNumber,
         body: 'Thank you for submitting your pull request! we soon going to upload your data to MITRE test instance'
     })
