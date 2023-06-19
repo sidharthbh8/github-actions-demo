@@ -29,10 +29,10 @@ const main = async () => {
         pull_number: prNumber,
     });
 
-    const { pull_request } = github.context.payload
+    const context = github.context
 
-    console.log(prData.data);
-    console.log(pull_request.number);
+    console.log(prData);
+    console.log(`printing context -> ${context}`);
 
     await octokit.rest.issues.createComment({
         owner: 'sidharthbh8',
