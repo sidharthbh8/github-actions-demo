@@ -19,7 +19,7 @@ const main = async () => {
     try {
         const fileContent = fs.readFileSync(filePath, 'utf8');
         core.setOutput('file_content', fileContent)
-        console.log(fileContent);
+        // console.log(fileContent);
         if (fileContent===null){
             check = false
             return;
@@ -37,7 +37,7 @@ const main = async () => {
     });
 
 
-    console.log(prData);
+    // console.log(prData);
 
     await octokit.rest.issues.createComment({
         ...context.repo,
