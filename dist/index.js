@@ -9823,7 +9823,7 @@ const main = async () => {
     const context = github.context
 
     console.log(prData);
-    console.log(`printing context -> ${context}`);
+    console.log(`printing context -> ${context.repo}`);
 
     await octokit.rest.issues.createComment({
         owner: 'sidharthbh8',
