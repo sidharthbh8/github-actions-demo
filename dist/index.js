@@ -16426,7 +16426,7 @@ const main = async () => {
 
     const response = await octokit.rest.pulls.get({
         ...context.repo,
-        pull_number,
+        pull_number: prNumber,
       });
       const { data } = response
       console.log(data);
