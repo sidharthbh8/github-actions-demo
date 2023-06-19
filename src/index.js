@@ -8,7 +8,7 @@ const main = async () => {
     const filePath = core.getInput('file_path', { required: true })
     const prNumber = core.getInput('pr_number', { required: true })
     const token = core.getInput('token', { required: true })
-    const personalToken = core.getInput('personal_token', { required: true})
+    // const personalToken = core.getInput('personal_token', { required: true})
 
     const octokit = new github.getOctokit(token);
 
@@ -18,7 +18,7 @@ const main = async () => {
         const fileContent = fs.readFileSync(filePath, 'utf8');
         core.setOutput('file_content', fileContent)
         console.log(fileContent);
-        
+
     } catch (e) {
         core.setFailed(e.message)
     }
