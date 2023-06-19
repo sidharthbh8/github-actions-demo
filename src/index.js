@@ -4,15 +4,13 @@ const fs = require('fs');
 // const { context } = require('../dist')
 
 const main = async () => {
+    try {
     const filePath = core.getInput('file_path', { required: true })
     const prNumber = core.getInput('pr_number', { required: true })
     const token = core.getInput('token', { required: true })
     const personalToken = core.getInput('personal_token', { required: true})
 
-    const{ Octokit }= require("@octokit/rest")
-    const octokit = new Octokit({
-        auth: token,
-      });
+    const octokit = new github.getOctokit(token);
 
     // console.log(github.context.payload);
 
@@ -20,6 +18,7 @@ const main = async () => {
         const fileContent = fs.readFileSync(filePath, 'utf8');
         core.setOutput('file_content', fileContent)
         console.log(fileContent);
+        
     } catch (e) {
         core.setFailed(e.message)
     }
@@ -35,12 +34,15 @@ const main = async () => {
     console.log(prData.data);
     console.log(pull_request.number);
 
-    // await octokit.rest.issues.createComment({
-    //     owner: 'sidharthbh8',
-    //     repo: 'zowe-cve-publication',
-    //     issue_number: pull_request.number,
-    //     body: 'Thank you for submitting your pull request! we soon going to upload your data to MITRE test instance'
-    // })
+    await octokit.rest.issues.createComment({
+        owner: 'sidharthbh8',
+        repo: 'zowe-cve-publication',
+        issue_number: prNumber,
+        body: `Thank you for submitting your pull request! we soon going to upload your data to MITRE test instance`
+    })
+    } catch (e) {
+        core.setFailed(e.message)        
+    }
 }
 
 main()

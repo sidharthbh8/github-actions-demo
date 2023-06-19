@@ -13,8 +13,8 @@ inputs:
   token:
     description: 'The token to use to access the GitHub API'
     required: true
-  personal_token: 'The token use to access octokit and comment in issues'
-    required: true
+  # personal_token: 'The token use to access octokit and comment in issues'
+  #   required: true
 
 outputs:
 
