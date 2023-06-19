@@ -66,10 +66,10 @@ const main = async () => {
       const vulnerabilitesCount = (description) => {
         const regex = /Amount of vulnerabilites reporting - (\d+)/
         const match = description.match(regex)
-        if(match !== match[1]){
-            return null
+        if(match && match[1]){
+            return match[1]
         }
-        return match[1]
+        return null
       }
       const number = vulnerabilitesCount (description)
       console.log(`Written Number here ${number}`);
