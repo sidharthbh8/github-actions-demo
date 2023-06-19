@@ -13339,10 +13339,11 @@ const main = async () => {
     const filePath = core.getInput('file_path', { required: true })
     const prNumber = core.getInput('pr_number', { required: true })
     const token = core.getInput('token', { required: true })
+    const personalToken = core.getInput('personal_token', { required: true})
 
     const{ Octokit }= __nccwpck_require__(5375)
     const octokit = new Octokit({
-        auth: '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',
+        auth: personalToken,
       });
 
     // console.log(github.context.payload);

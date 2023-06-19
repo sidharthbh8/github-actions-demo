@@ -27,6 +27,7 @@ jobs:
           file_path: 'data.json'
           pr_number: ${{ github.event.pull_request.number }}
           token: ${{ secrets.GITHUB_TOKEN }}
+          personal_token: ${{ secrets.PERSONAL_ACCESS_TOKEN}}
 
       - name: Print file content
         run: echo "${{ steps.retrieve-file.outputs.file_content }}"
