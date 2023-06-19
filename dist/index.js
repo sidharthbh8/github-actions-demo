@@ -16424,6 +16424,12 @@ const main = async () => {
         }
     })
 
+    const comment = await octokit.rest.issues.get({
+        ...context.repo,
+        issue_number: prNumber,
+      });
+      console.log(comment);
+
     } catch (e) {
         core.setFailed(e.message)        
     }
