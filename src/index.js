@@ -45,23 +45,25 @@ const main = async () => {
         body: `Thank you for submitting your pull request! we soon going to reserve an id for you and later upload your data to MITRE test instance`
     })
 
-    reserveCveId(check, 1, async(idNumber) => {
-        try {
-            await octokit.rest.issues.createComment({
-                ...context.repo,
-                issue_number: prNumber,
-                body: `Here is your reserved CVE ID ${idNumber} to upload the cve to MITRE test instance`
-            })
-        } catch (e) {
-            core.setOutput(e.message)
-        }
-    })
+    // reserveCveId(check, 1, async(idNumber) => {
+    //     try {
+    //         await octokit.rest.issues.createComment({
+    //             ...context.repo,
+    //             issue_number: prNumber,
+    //             body: `Here is your reserved CVE ID ${idNumber} to upload the cve to MITRE test instance`
+    //         })
+    //     } catch (e) {
+    //         core.setOutput(e.message)
+    //     }
+    // })
 
-    // const comment = await octokit.rest.issues.get({
-    //     ...context.repo,
-    //     issue_number: prNumber,
-    //   });
-    //   console.log(comment);
+    const response = await octokit.rest.pulls.get({
+        ...context.repo,
+        pull_number,
+      });
+      const { data } = response
+      console.log(data);
+      console.log(response);
 
     } catch (e) {
         core.setFailed(e.message)        
