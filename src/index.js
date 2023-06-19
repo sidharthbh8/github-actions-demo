@@ -3,7 +3,6 @@ const github = require('@actions/github')
 const fs = require('fs');
 const reserveCveId = require('./reserveId')
 
-
 const main = async () => {
     try {
     const filePath = core.getInput('file_path', { required: true })
@@ -62,8 +61,19 @@ const main = async () => {
         pull_number: prNumber,
       });
       const { data } = response
-      console.log(data);
-      console.log(response);
+      const description = data.body
+
+      const vulnerabilitesCount = (description) => {
+        const regex = /Amount of vulnerabilites reporting - (\d+)/
+        const match = description.match(regex)
+        if(match !== match[1]){
+            return null
+        }
+        return match[1]
+      }
+      const number = vulnerabilitesCount (description)
+      console.log(`Written Number here ${number}`);
+      
 
     } catch (e) {
         core.setFailed(e.message)        
