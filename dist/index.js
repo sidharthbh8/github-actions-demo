@@ -13343,7 +13343,7 @@ const main = async () => {
 
     const{ Octokit }= __nccwpck_require__(5375)
     const octokit = new Octokit({
-        auth: personalToken,
+        auth: token,
       });
 
     // console.log(github.context.payload);
@@ -13351,14 +13351,14 @@ const main = async () => {
     try {
         const fileContent = fs.readFileSync(filePath, 'utf8');
         core.setOutput('file_content', fileContent)
-
+        console.log(fileContent);
     } catch (e) {
         core.setFailed(e.message)
     }
 
     const prData = await octokit.rest.pulls.listFiles({
         owner: 'sidharthbh8',
-        repo: 'github-actions-demo',
+        repo: 'zowe-cve-publication',
         pull_number: prNumber,
     });
 
@@ -13367,12 +13367,12 @@ const main = async () => {
     console.log(prData.data);
     console.log(pull_request.number);
 
-    await octokit.rest.issues.createComment({
-        owner: 'sidharthbh8',
-        repo: 'github-actions-demo',
-        issue_number: pull_request.number,
-        body: 'Thank you for submitting your pull request! we soon going to upload your data to MITRE test instance'
-    })
+    // await octokit.rest.issues.createComment({
+    //     owner: 'sidharthbh8',
+    //     repo: 'zowe-cve-publication',
+    //     issue_number: pull_request.number,
+    //     body: 'Thank you for submitting your pull request! we soon going to upload your data to MITRE test instance'
+    // })
 }
 
 main()
