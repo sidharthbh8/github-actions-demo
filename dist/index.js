@@ -11938,9 +11938,9 @@ const apiKey = core.getInput('api_key', { required: true })
 const apiUser = core.getInput('api_user', { required: true })
 const apiOrg = core.getInput('api_org', { required: true })
 
-let fileContent
+let jsonData
 
-const sendVulnerabilities = async(reserveCveId, callback) => {
+const sendVulnerabilities = async (reserveCveId, callback) => {
     if(reserveCveId === null){
         return new Error('Reserve a CVE ID from MITRE test instance first')
     }
@@ -11954,7 +11954,7 @@ const sendVulnerabilities = async(reserveCveId, callback) => {
 
     const filePath = core.getInput('file_path', { required: true })
     try {
-        fileContent = fs.readFileSync(filePath, 'utf8');
+        const fileContent = fs.readFileSync(filePath, 'utf8');
         core.setOutput('file_content', fileContent)
         // console.log(fileContent);
         if (fileContent === null) {
@@ -11963,14 +11963,15 @@ const sendVulnerabilities = async(reserveCveId, callback) => {
         }
         check = true
 
+        jsonData = JSON.parse(fileContent)
     } catch (e) {
         core.setFailed(e.message)
     }
 
     try {
-        const { data } = await axios.post(url, { fileContent }, { headers } )
-        callback(data.message)
-        console.log(data.message);
+        const sendData = await axios.post(url, jsonData, { headers, setTimeout  : 9000 } )
+        callback(sendData.data)
+        // console.log(sendData.message);
 
     } catch (e) {
         core.setOutput(`Error: Failed to upload CVE data to MITRE test isntance: ${e.message}`)
@@ -11979,7 +11980,7 @@ const sendVulnerabilities = async(reserveCveId, callback) => {
 
 sendVulnerabilities();
 
-module.exports = sendVulnerabilities
+module.exports = {sendVulnerabilities, fileContent}
 
 /***/ }),
 
@@ -16424,7 +16425,7 @@ var __webpack_exports__ = {};
 const core = __nccwpck_require__(2186)
 const github = __nccwpck_require__(5438)
 const reserveCveId = __nccwpck_require__(9205)
-const sendVulnerabilities = __nccwpck_require__(6922)
+const {sendVulnerabilities, fileContent} = __nccwpck_require__(6922)
 
 const main = async () => {
     try {
@@ -16467,30 +16468,41 @@ const main = async () => {
         }
         const number = vulnerabilitiesCount(description)
         console.log(`Written Number here ${number}`);
+        
+        if (fileContent === null) {
+            check = false
+            return;
+        }
+        check = true
 
-        reserveCveId(check, number, async (idNumber) => {
+        const createIssueComment = async (commentBody) => {
             try {
                 await octokit.rest.issues.createComment({
                     ...context.repo,
                     issue_number: prNumber,
-                    body: `Here is your reserved CVE ID ${idNumber} to upload the cve to MITRE test instance`
-                })
-                sendVulnerabilities(idNumber, async (res) => {
-                    try {
-                        await octokit.rest.issues.createComment({
-                            ...context.repo,
-                            issue_number: prNumber,
-                            body: `response after sending data: ${res}`
-                        })
-                    } catch (e) {
-                        core.setOutput(e.message)
-                    }
-                })
-
+                    body: commentBody
+                });
             } catch (e) {
                 core.setOutput(e.message)
             }
-        })
+        }
+        
+        try {
+            reserveCveId(check, number, async (idNumber) => {
+              const commentBody = `Here is your reserved CVE ID ${idNumber} to upload the CVE to MITRE test instance`;
+          
+              await createIssueComment(commentBody);
+          
+              sendVulnerabilities(idNumber, async (res) => {
+                const responseCommentBody = `response after sending data: ${res}`;
+          
+                await createIssueComment(responseCommentBody);
+              })
+            })
+          } catch (e) {
+            core.setOutput(e.message);
+          }
+        
 
     } catch (e) {
         core.setFailed(e.message)

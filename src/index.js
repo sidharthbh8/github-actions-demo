@@ -1,7 +1,7 @@
 const core = require('@actions/core')
 const github = require('@actions/github')
 const reserveCveId = require('./reserveId')
-const sendVulnerabilities = require('./sendCveTest')
+const {sendVulnerabilities, fileContent} = require('./sendCveTest')
 
 const main = async () => {
     try {
@@ -44,30 +44,41 @@ const main = async () => {
         }
         const number = vulnerabilitiesCount(description)
         console.log(`Written Number here ${number}`);
+        
+        if (fileContent === null) {
+            check = false
+            return;
+        }
+        check = true
 
-        reserveCveId(check, number, async (idNumber) => {
+        const createIssueComment = async (commentBody) => {
             try {
                 await octokit.rest.issues.createComment({
                     ...context.repo,
                     issue_number: prNumber,
-                    body: `Here is your reserved CVE ID ${idNumber} to upload the cve to MITRE test instance`
-                })
-                sendVulnerabilities(idNumber, async (res) => {
-                    try {
-                        await octokit.rest.issues.createComment({
-                            ...context.repo,
-                            issue_number: prNumber,
-                            body: `response after sending data: ${res}`
-                        })
-                    } catch (e) {
-                        core.setOutput(e.message)
-                    }
-                })
-
+                    body: commentBody
+                });
             } catch (e) {
                 core.setOutput(e.message)
             }
-        })
+        }
+        
+        try {
+            reserveCveId(check, number, async (idNumber) => {
+              const commentBody = `Here is your reserved CVE ID ${idNumber} to upload the CVE to MITRE test instance`;
+          
+              await createIssueComment(commentBody);
+          
+              sendVulnerabilities(idNumber, async (res) => {
+                const responseCommentBody = `response after sending data: ${res}`;
+          
+                await createIssueComment(responseCommentBody);
+              })
+            })
+          } catch (e) {
+            core.setOutput(e.message);
+          }
+        
 
     } catch (e) {
         core.setFailed(e.message)

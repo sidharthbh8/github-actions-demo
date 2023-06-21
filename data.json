@@ -1,61 +1,91 @@
 {
-    "dataType": "CVE_RECORD",
-    "dataVersion": "5.0",
-    "cveMetadata": {
-        "cveId": "CVE-2021-4238",
-        "assignerOrgId": "fe166444-9b7e-41e5-90de-6a19a5f6d9d1",
-        "state": "PUBLISHED",
-        "assignerShortName": "Zowe",
-        "dateReserved": "2023-01-02T16:37:17.293Z",
-        "datePublished": "2023-01-03T09:07:41.668Z"
-    },
-    "containers": {
-        "cna": {
-            "affected": [
-                {
-                    "vendor": "Open Mainframe Project",
-                    "product": "Zowe",
-                    "versions": [
-                        {
-                            "version": "1.16.0",
-                            "status": "affected",
-                            "lessThan": "1.19.0",
-                            "versionType": "semver"
-                        }
-                    ]
-                }
-            ],
-            "descriptions": [
-                {
-                    "lang": "en",
-                    "value": "It is possible to manipulate the JWT token without the knowledge of the JWT secret and authenticate without valid JWT token as any user. This is happening only in the situation when zOSMF doesn’t have the APAR PH12143 applied. This issue affects: 1.16 versions to 1.19. What happens is that the services using the ZAAS client or the API ML API to query will be deceived into believing the information in the JWT token is valid when it isn’t. It’s possible to use this to persuade the southbound service that different user is authenticated."
-                }
-            ],
-            "problemTypes": [
-                {
-                    "descriptions": [
-                        {
-                            "lang": "en",
-                            "cweId": "CWE-269",
-                            "description": "CWE-269 Improper Privilege Management",
-                            "type": "CWE"
-                        }
-                    ]
-                }
-            ],
-            "providerMetadata": {
-                "orgId": "fe166444-9b7e-41e5-90de-6a19a5f6d9d1",
-                "shortName": "Zowe",
-                "dateUpdated": "2023-01-03T09:07:41.668Z"
-            },
-            "references": [
-                {
-                    "tags": [
-                        "product"
-                    ],
-                    "url": "https://github.com/zowe/api-layer/"
-                }
+    "cnaContainer": {
+        "title": "Imperative Local Command Injection allows Activity Masking",
+        "affected": [
+          {
+            "vendor": "Open Mainframe Project",
+            "product": "Zowe",
+            "versions": [
+              {
+                "version": "1.16.0",
+                "status": "affected",
+                "lessThan": "1.28.2",
+                "versionType": "semver"
+              },
+              {
+                "version": "2.0.0",
+                "status": "affected",
+                "lessThan": "2.5.0",
+                "versionType":"semver"
+              }
             ]
-        }
-    }
-}
+          }
+        ],
+        "descriptions": [
+          {
+            "lang": "en",
+            "value": "A vulnerability in Imperative framework which allows already-privileged local actors to execute arbitrary shell commands via plugin install/update commands, or maliciously formed environment variables. Impacts Zowe CLI."
+          }
+        ],
+        "metrics": [
+          {
+              "format": "CVSS",
+              "scenarios": [
+                {
+                  "lang": "en",
+                  "value": "GENERAL"
+                }
+              ],
+              "cvssV3_1": {
+                "baseScore": 3.3,
+                "baseSeverity": "LOW",
+                "version": "3.1",
+                "attackVector": "LOCAL",
+                "attackComplexity": "LOW",
+                "privilegesRequired": "LOW",
+                "userInteraction": "NONE",
+                "scope": "UNCHANGED",
+                "confidentialityImpact": "LOW",
+                "integrityImpact": "NONE",
+                "availabilityImpact": "NONE",
+                "vectorString": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:L/I:N/A:N/E:P/RL:U/RC:C/CR:L/IR:X/AR:X/MAV:L/MAC:L/MPR:L/MUI:N/MS:U/MC:L/MI:X/MA:X"
+              }
+          }
+        ],
+        "solutions": [
+          {
+            "lang": "en",
+            "value": "This issue is fixed in Zowe 1.28.2 or later, and Zowe 2.5.0 or later."
+          }
+        ],
+        "exploits": [
+          {
+            "lang": "en",
+            "value": "There are no known exploits of this issue."
+          }
+        ],
+        "credits": [
+          {
+            "lang": "en",
+            "value": "Andrew Harn",
+            "type": "finder"
+          },
+          {
+            "lang": "en",
+            "value": "SonarCloud",
+            "type": "tool"
+          }
+        ],
+        "providerMetadata": {
+          "orgId": "fe166444-9b7e-41e5-90de-6a19a5f6d9d1"
+        },
+        "references": [
+          {
+            "tags": [
+              "product"
+            ],
+            "url": "https://github.com/zowe/imperative/"
+          }
+        ]
+       }
+      }  
