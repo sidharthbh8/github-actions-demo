@@ -64,15 +64,17 @@ const main = async () => {
         }
 
         try {
-            const idNumber = await reserveCveId(check, number)
-            const commentBody = `Here is your reserved CVE ID ${idNumber} to upload the CVE to MITRE test instance`;
-            await createIssueComment(commentBody);
+            reserveCveId(check, number, async (idNumber) => {
+                const commentBody = `Here is your reserved CVE ID ${idNumber} to upload the CVE to MITRE test instance`;
 
-            sendVulnerabilities(idNumber, async (res) => {
-                const responseCommentBody = `Successfully Uploaded CVE Report to MITRE test instance: ${res}`;
-                await createIssueComment(responseCommentBody);
+                await createIssueComment(commentBody);
+
+                sendVulnerabilities(idNumber, async (res) => {
+                    const responseCommentBody = `Successfully Uploaded CVE Report to MITRE test instance: ${res}`;
+
+                    await createIssueComment(responseCommentBody);
+                })
             })
-
         } catch (e) {
             core.setOutput(e.message);
         }
