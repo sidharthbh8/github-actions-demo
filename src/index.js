@@ -1,7 +1,7 @@
 const core = require('@actions/core')
 const github = require('@actions/github')
 const reserveCveId = require('./reserveId')
-const {sendVulnerabilities, fileContent} = require('./sendCveTest')
+const { sendVulnerabilities, fileContent } = require('./sendCveTest')
 
 const main = async () => {
     try {
@@ -44,7 +44,7 @@ const main = async () => {
         }
         const number = vulnerabilitiesCount(description)
         console.log(`Written Number here ${number}`);
-        
+
         if (fileContent === null) {
             check = false
             return;
@@ -62,23 +62,21 @@ const main = async () => {
                 core.setOutput(e.message)
             }
         }
-        
+
         try {
-            reserveCveId(check, number, async (idNumber) => {
-              const commentBody = `Here is your reserved CVE ID ${idNumber} to upload the CVE to MITRE test instance`;
-          
-              await createIssueComment(commentBody);
-          
-              sendVulnerabilities(idNumber, async (res) => {
+            const idNumber = await reserveCveId(check, number)
+            const commentBody = `Here is your reserved CVE ID ${idNumber} to upload the CVE to MITRE test instance`;
+            await createIssueComment(commentBody);
+
+            sendVulnerabilities(idNumber, async (res) => {
                 const responseCommentBody = `Successfully Uploaded CVE Report to MITRE test instance: ${res}`;
-          
                 await createIssueComment(responseCommentBody);
-              })
             })
-          } catch (e) {
+
+        } catch (e) {
             core.setOutput(e.message);
-          }
-        
+        }
+
 
     } catch (e) {
         core.setFailed(e.message)

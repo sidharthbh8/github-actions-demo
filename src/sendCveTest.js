@@ -44,7 +44,7 @@ const sendVulnerabilities = async (reserveCveId, callback) => {
 
 const run = async () => {
     await sendVulnerabilities()
-    module.exports = { sendVulnerabilities, fileContent }
 }
-
 run();
+
+module.exports = { sendVulnerabilities, fileContent }

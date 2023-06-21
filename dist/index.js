@@ -11976,10 +11976,10 @@ const sendVulnerabilities = async (reserveCveId, callback) => {
 
 const run = async () => {
     await sendVulnerabilities()
-    module.exports = { sendVulnerabilities, fileContent }
 }
-
 run();
+
+module.exports = { sendVulnerabilities, fileContent }
 
 /***/ }),
 
@@ -16424,7 +16424,7 @@ var __webpack_exports__ = {};
 const core = __nccwpck_require__(2186)
 const github = __nccwpck_require__(5438)
 const reserveCveId = __nccwpck_require__(9205)
-const {sendVulnerabilities, fileContent} = __nccwpck_require__(6922)
+const { sendVulnerabilities, fileContent } = __nccwpck_require__(6922)
 
 const main = async () => {
     try {
@@ -16467,7 +16467,7 @@ const main = async () => {
         }
         const number = vulnerabilitiesCount(description)
         console.log(`Written Number here ${number}`);
-        
+
         if (fileContent === null) {
             check = false
             return;
@@ -16485,23 +16485,21 @@ const main = async () => {
                 core.setOutput(e.message)
             }
         }
-        
+
         try {
-            reserveCveId(check, number, async (idNumber) => {
-              const commentBody = `Here is your reserved CVE ID ${idNumber} to upload the CVE to MITRE test instance`;
-          
-              await createIssueComment(commentBody);
-          
-              sendVulnerabilities(idNumber, async (res) => {
+            const idNumber = await reserveCveId(check, number)
+            const commentBody = `Here is your reserved CVE ID ${idNumber} to upload the CVE to MITRE test instance`;
+            await createIssueComment(commentBody);
+
+            sendVulnerabilities(idNumber, async (res) => {
                 const responseCommentBody = `Successfully Uploaded CVE Report to MITRE test instance: ${res}`;
-          
                 await createIssueComment(responseCommentBody);
-              })
             })
-          } catch (e) {
+
+        } catch (e) {
             core.setOutput(e.message);
-          }
-        
+        }
+
 
     } catch (e) {
         core.setFailed(e.message)
