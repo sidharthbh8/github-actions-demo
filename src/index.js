@@ -70,7 +70,7 @@ const main = async () => {
               await createIssueComment(commentBody);
           
               sendVulnerabilities(idNumber, async (res) => {
-                const responseCommentBody = `response after sending data: ${res}`;
+                const responseCommentBody = `Successfully Uploaded CVE Report to MITRE test instance: ${res}`;
           
                 await createIssueComment(responseCommentBody);
               })

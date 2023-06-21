@@ -11939,9 +11939,10 @@ const apiUser = core.getInput('api_user', { required: true })
 const apiOrg = core.getInput('api_org', { required: true })
 
 let jsonData
+let fileContent
 
 const sendVulnerabilities = async (reserveCveId, callback) => {
-    if(reserveCveId === null){
+    if (reserveCveId === null) {
         return new Error('Reserve a CVE ID from MITRE test instance first')
     }
 
@@ -11954,14 +11955,9 @@ const sendVulnerabilities = async (reserveCveId, callback) => {
 
     const filePath = core.getInput('file_path', { required: true })
     try {
-        const fileContent = fs.readFileSync(filePath, 'utf8');
+        fileContent = fs.readFileSync(filePath, 'utf8');
         core.setOutput('file_content', fileContent)
         // console.log(fileContent);
-        if (fileContent === null) {
-            check = false
-            return;
-        }
-        check = true
 
         jsonData = JSON.parse(fileContent)
     } catch (e) {
@@ -11969,7 +11965,7 @@ const sendVulnerabilities = async (reserveCveId, callback) => {
     }
 
     try {
-        const sendData = await axios.post(url, jsonData, { headers, setTimeout  : 9000 } )
+        const sendData = await axios.post(url, jsonData, { headers, setTimeout: 9000 })
         callback(sendData.data)
         // console.log(sendData.message);
 
@@ -11978,9 +11974,12 @@ const sendVulnerabilities = async (reserveCveId, callback) => {
     }
 }
 
-sendVulnerabilities();
+const run = async () => {
+    await sendVulnerabilities()
+    module.exports = { sendVulnerabilities, fileContent }
+}
 
-module.exports = {sendVulnerabilities, fileContent}
+run();
 
 /***/ }),
 
@@ -16494,7 +16493,7 @@ const main = async () => {
               await createIssueComment(commentBody);
           
               sendVulnerabilities(idNumber, async (res) => {
-                const responseCommentBody = `response after sending data: ${res}`;
+                const responseCommentBody = `Successfully Uploaded CVE Report to MITRE test instance: ${res}`;
           
                 await createIssueComment(responseCommentBody);
               })
