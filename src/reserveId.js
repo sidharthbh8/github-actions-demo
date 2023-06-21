@@ -20,11 +20,11 @@ const reserveCveId = async (check, amount, callback) => {
     }
 
     try {
-        const reservedCveId = await axios.post(url, null, {headers})
+        const reservedCveId = await axios.post(url, null, { headers })
         callback(reservedCveId.data.cve_ids[0].cve_id)
         // console.log('Reserved CVE ID:', reservedCveId.data.cve_ids[0].cve_id)
     } catch (e) {
-        console.error('Failed to reserve CVE ID:', e)
+        console.error(`Error: Failed to reserve CVE ID: ${e}`)
     }
 }
 

@@ -11913,17 +11913,73 @@ const reserveCveId = async (check, amount, callback) => {
     }
 
     try {
-        const reservedCveId = await axios.post(url, null, {headers})
+        const reservedCveId = await axios.post(url, null, { headers })
         callback(reservedCveId.data.cve_ids[0].cve_id)
         // console.log('Reserved CVE ID:', reservedCveId.data.cve_ids[0].cve_id)
     } catch (e) {
-        console.error('Failed to reserve CVE ID:', e)
+        console.error(`Error: Failed to reserve CVE ID: ${e}`)
     }
 }
 
 reserveCveId();
 
 module.exports = reserveCveId
+
+/***/ }),
+
+/***/ 6922:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+const core = __nccwpck_require__(2186)
+const axios = __nccwpck_require__(8757)
+const fs = __nccwpck_require__(7147)
+
+const apiKey = core.getInput('api_key', { required: true })
+const apiUser = core.getInput('api_user', { required: true })
+const apiOrg = core.getInput('api_org', { required: true })
+
+let fileContent
+
+const sendVulnerabilities = async(reserveCveId, callback) => {
+    if(reserveCveId === null){
+        return new Error('Reserve a CVE ID from MITRE test instance first')
+    }
+
+    const url = `https://cveawg-test.mitre.org/api/cve/${reserveCveId}/cna`
+    const headers = {
+        'CVE-API-ORG': apiOrg,
+        'CVE-API-USER': apiUser,
+        'CVE-API-KEY': apiKey,
+    }
+
+    const filePath = core.getInput('file_path', { required: true })
+    try {
+        fileContent = fs.readFileSync(filePath, 'utf8');
+        core.setOutput('file_content', fileContent)
+        // console.log(fileContent);
+        if (fileContent === null) {
+            check = false
+            return;
+        }
+        check = true
+
+    } catch (e) {
+        core.setFailed(e.message)
+    }
+
+    try {
+        const { data } = await axios.post(url, { fileContent }, { headers } )
+        callback(data.message)
+        console.log(data.message);
+
+    } catch (e) {
+        core.setOutput(`Error: Failed to upload CVE data to MITRE test isntance: ${e.message}`)
+    }
+}
+
+sendVulnerabilities();
+
+module.exports = sendVulnerabilities
 
 /***/ }),
 
@@ -16367,87 +16423,81 @@ var __webpack_exports__ = {};
 (() => {
 const core = __nccwpck_require__(2186)
 const github = __nccwpck_require__(5438)
-const fs = __nccwpck_require__(7147);
 const reserveCveId = __nccwpck_require__(9205)
+const sendVulnerabilities = __nccwpck_require__(6922)
 
 const main = async () => {
     try {
-    const filePath = core.getInput('file_path', { required: true })
-    const prNumber = core.getInput('pr_number', { required: true })
-    const token = core.getInput('token', { required: true })
-    // const personalToken = core.getInput('personal_token', { required: true})
-    let check
+        const prNumber = core.getInput('pr_number', { required: true })
+        const token = core.getInput('token', { required: true })
+        // const personalToken = core.getInput('personal_token', { required: true})
+        let check
 
-    const octokit = new github.getOctokit(token);
+        const octokit = new github.getOctokit(token);
+        const context = github.context
+        // console.log(github.context.payload);
 
-    // console.log(github.context.payload);
+        const prData = await octokit.rest.pulls.listFiles({
+            ...context.repo,
+            pull_number: prNumber,
+        });
 
-    try {
-        const fileContent = fs.readFileSync(filePath, 'utf8');
-        core.setOutput('file_content', fileContent)
-        // console.log(fileContent);
-        if (fileContent===null){
-            check = false
-            return;
+        // console.log(prData);
+
+        await octokit.rest.issues.createComment({
+            ...context.repo,
+            issue_number: prNumber,
+            body: `Thank you for submitting your pull request! we soon going to reserve an id for you and later upload your data to MITRE test instance`
+        })
+
+        const response = await octokit.rest.pulls.get({
+            ...context.repo,
+            pull_number: prNumber,
+        });
+        const { data } = response
+        const description = data.body
+
+        const vulnerabilitiesCount = (description) => {
+            const regex = /Amount of vulnerabilities reporting - (\d+)/
+            const match = description.match(regex)
+            if (match && match[1]) {
+                return match[1]
+            }
+            return null
         }
-        check = true
+        const number = vulnerabilitiesCount(description)
+        console.log(`Written Number here ${number}`);
+
+        reserveCveId(check, number, async (idNumber) => {
+            try {
+                await octokit.rest.issues.createComment({
+                    ...context.repo,
+                    issue_number: prNumber,
+                    body: `Here is your reserved CVE ID ${idNumber} to upload the cve to MITRE test instance`
+                })
+                sendVulnerabilities(idNumber, async (res) => {
+                    try {
+                        await octokit.rest.issues.createComment({
+                            ...context.repo,
+                            issue_number: prNumber,
+                            body: `response after sending data: ${res}`
+                        })
+                    } catch (e) {
+                        core.setOutput(e.message)
+                    }
+                })
+
+            } catch (e) {
+                core.setOutput(e.message)
+            }
+        })
+
     } catch (e) {
         core.setFailed(e.message)
     }
-
-    const context = github.context
-
-    const prData = await octokit.rest.pulls.listFiles({
-        ...context.repo,
-        pull_number: prNumber,
-    });
-
-
-    // console.log(prData);
-
-    await octokit.rest.issues.createComment({
-        ...context.repo,
-        issue_number: prNumber,
-        body: `Thank you for submitting your pull request! we soon going to reserve an id for you and later upload your data to MITRE test instance`
-    })
-
-    // reserveCveId(check, 1, async(idNumber) => {
-    //     try {
-    //         await octokit.rest.issues.createComment({
-    //             ...context.repo,
-    //             issue_number: prNumber,
-    //             body: `Here is your reserved CVE ID ${idNumber} to upload the cve to MITRE test instance`
-    //         })
-    //     } catch (e) {
-    //         core.setOutput(e.message)
-    //     }
-    // })
-
-    const response = await octokit.rest.pulls.get({
-        ...context.repo,
-        pull_number: prNumber,
-      });
-      const { data } = response
-      const description = data.body
-
-      const vulnerabilitesCount = (description) => {
-        const regex = /Amount of vulnerabilites reporting - (\d+)/
-        const match = description.match(regex)
-        if(match && match[1]){
-            return match[1]
-        }
-        return null
-      }
-      const number = vulnerabilitesCount (description)
-      console.log(`Written Number here ${number}`);
-      
-
-    } catch (e) {
-        core.setFailed(e.message)        
-    }
 }
 
-main()
+main();
 })();
 
 module.exports = __webpack_exports__;
