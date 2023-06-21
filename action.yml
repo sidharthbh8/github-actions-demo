@@ -15,6 +15,15 @@ inputs:
     required: true
   # personal_token: 'The token use to access octokit and comment in issues'
   #   required: true
+  api_key: 
+    description: 'CVE API KEY'
+    required: true
+  api_user: 
+    description: 'CVE API username'
+    required: true
+  api_org: 
+    description: 'CVE API organization'
+    required: true
 
 outputs:
 
