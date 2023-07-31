@@ -84,12 +84,6 @@ const main = async () => {
 
                 await createIssueComment(commentBody);
 
-                if (fileContent === undefined || fileContent.trim() === '') {
-                    console.error('File content is empty or undefined.');
-                    core.setFailed('File content is empty or undefined.');
-                    return;
-                }
-                else{
                     cveStructureValidator(fileContent, async (error, result) => {
                         if(error){
                             await createIssueComment(error)
@@ -98,7 +92,6 @@ const main = async () => {
                             await createIssueComment(result)
                         }
                     })
-                }
 
                 sendVulnerabilities(idNumber, async (res) => {
                     const responseCommentBody = `Successfully Uploaded CVE Report to MITRE test instance: ${res}`;

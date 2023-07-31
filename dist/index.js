@@ -19299,9 +19299,9 @@ const validateCve = async (data) => {
 const cveStructureValidator = (fileContent, callback) => {
   if (fileContent === undefined) {
     callback(`Can not read the CVE JSON file`, undefined)
+    return;
   }
 
-  try {
     const cveData = JSON.parse(fileContent)
     validateCve(cveData)
       .then((invalid) => {
@@ -19323,10 +19323,8 @@ const cveStructureValidator = (fileContent, callback) => {
       .catch(parseError => {
         callback(parseError, undefined)
       })
-  } catch (parseError) {
-    callback(parseError, undefined)
   }
-}
+
   cveStructureValidator();
 
   module.exports = cveStructureValidator
@@ -23881,12 +23879,6 @@ const main = async () => {
 
                 await createIssueComment(commentBody);
 
-                if (fileContent === undefined || fileContent.trim() === '') {
-                    console.error('File content is empty or undefined.');
-                    core.setFailed('File content is empty or undefined.');
-                    return;
-                }
-                else{
                     cveStructureValidator(fileContent, async (error, result) => {
                         if(error){
                             await createIssueComment(error)
@@ -23895,7 +23887,6 @@ const main = async () => {
                             await createIssueComment(result)
                         }
                     })
-                }
 
                 sendVulnerabilities(idNumber, async (res) => {
                     const responseCommentBody = `Successfully Uploaded CVE Report to MITRE test instance: ${res}`;

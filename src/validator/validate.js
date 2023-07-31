@@ -15,9 +15,9 @@ const validateCve = async (data) => {
 const cveStructureValidator = (fileContent, callback) => {
   if (fileContent === undefined) {
     callback(`Can not read the CVE JSON file`, undefined)
+    return;
   }
 
-  try {
     const cveData = JSON.parse(fileContent)
     validateCve(cveData)
       .then((invalid) => {
@@ -39,10 +39,8 @@ const cveStructureValidator = (fileContent, callback) => {
       .catch(parseError => {
         callback(parseError, undefined)
       })
-  } catch (parseError) {
-    callback(parseError, undefined)
   }
-}
+
   cveStructureValidator();
 
   module.exports = cveStructureValidator
