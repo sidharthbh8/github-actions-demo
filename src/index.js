@@ -12,8 +12,22 @@ const main = async () => {
         const prNumber = core.getInput('pr_number', { required: true })
         const token = core.getInput('token', { required: true })
         const filePath = core.getInput('file_path', { required: true })
-        fileContent = fs.readFileSync(filePath, 'utf8')
-        core.debug('File Content1:', fileContent);
+
+        try {
+            fileContent = await fs.readFile(filePath, 'utf8');
+          } catch (error) {
+            
+            console.error('Error reading file:', error);
+            core.setFailed('Error reading file');
+            return;
+          }
+      
+          if (fileContent === undefined || fileContent.trim() === '') {
+            console.error('File content is empty or undefined.');
+            core.setFailed('File content is empty or undefined.');
+            return;
+          }
+
         // const personalToken = core.getInput('personal_token', { required: true})
         let check
 
@@ -76,8 +90,6 @@ const main = async () => {
 
                 await createIssueComment(commentBody);
 
-                core.debug('File Content2:', fileContent);
-                console.log('File Content:', fileContent);
                 cveStructureValidator(fileContent, async (error, result) => {
                     if(error){
                         await createIssueComment(error)
