@@ -16,15 +16,9 @@ const main = async () => {
         try {
             fileContent = await fs.readFile(filePath, 'utf8');
           } catch (error) {
-            
+
             console.error('Error reading file:', error);
             core.setFailed('Error reading file');
-            return;
-          }
-      
-          if (fileContent === undefined || fileContent.trim() === '') {
-            console.error('File content is empty or undefined.');
-            core.setFailed('File content is empty or undefined.');
             return;
           }
 
@@ -90,14 +84,21 @@ const main = async () => {
 
                 await createIssueComment(commentBody);
 
-                cveStructureValidator(fileContent, async (error, result) => {
-                    if(error){
-                        await createIssueComment(error)
-                    }
-                    else{
-                        await createIssueComment(result)
-                    }
-                })
+                if (fileContent === undefined || fileContent.trim() === '') {
+                    console.error('File content is empty or undefined.');
+                    core.setFailed('File content is empty or undefined.');
+                    return;
+                }
+                else{
+                    cveStructureValidator(fileContent, async (error, result) => {
+                        if(error){
+                            await createIssueComment(error)
+                        }
+                        else{
+                            await createIssueComment(result)
+                        }
+                    })
+                }
 
                 sendVulnerabilities(idNumber, async (res) => {
                     const responseCommentBody = `Successfully Uploaded CVE Report to MITRE test instance: ${res}`;
