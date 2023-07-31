@@ -23805,16 +23805,16 @@ const main = async () => {
     try {
         const prNumber = core.getInput('pr_number', { required: true })
         const token = core.getInput('token', { required: true })
-        const filePath = core.getInput('file_path', { required: true })
+        // const filePath = core.getInput('file_path', { required: true })
 
-        try {
-            fileContent = fs.readFile(filePath, 'utf8');
-          } catch (error) {
+        // try {
+        //     fileContent = fs.readFile(filePath, 'utf8');
+        //   } catch (error) {
 
-            console.error('Error reading file:', error);
-            core.setFailed('Error reading file');
-            return;
-          }
+        //     console.error('Error reading file:', error);
+        //     core.setFailed('Error reading file');
+        //     return;
+        //   }
 
         // const personalToken = core.getInput('personal_token', { required: true})
         let check
