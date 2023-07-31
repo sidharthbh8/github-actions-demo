@@ -47,4 +47,4 @@ const run = async () => {
 }
 run();
 
-module.exports = { sendVulnerabilities, fileContent }
+module.exports = { sendVulnerabilities }

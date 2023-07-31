@@ -1,13 +1,18 @@
 const core = require('@actions/core')
 const github = require('@actions/github')
+const fs = require('fs')
 const reserveCveId = require('./reserveId')
-const { sendVulnerabilities, fileContent } = require('./sendCveTest')
+const { sendVulnerabilities } = require('./sendCveTest')
 const cveStructureValidator = require('./validator/validate')
+
+let fileContent
 
 const main = async () => {
     try {
         const prNumber = core.getInput('pr_number', { required: true })
         const token = core.getInput('token', { required: true })
+        const filePath = core.getInput('file_path', { required: true })
+        fileContent = fs.readFileSync(filePath)
         // const personalToken = core.getInput('personal_token', { required: true})
         let check
 

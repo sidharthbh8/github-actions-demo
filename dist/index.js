@@ -19275,7 +19275,7 @@ const run = async () => {
 }
 run();
 
-module.exports = { sendVulnerabilities, fileContent }
+module.exports = { sendVulnerabilities }
 
 /***/ }),
 
@@ -23794,14 +23794,19 @@ var __webpack_exports__ = {};
 (() => {
 const core = __nccwpck_require__(2186)
 const github = __nccwpck_require__(5438)
+const fs = __nccwpck_require__(7147)
 const reserveCveId = __nccwpck_require__(9205)
-const { sendVulnerabilities, fileContent } = __nccwpck_require__(6922)
+const { sendVulnerabilities } = __nccwpck_require__(6922)
 const cveStructureValidator = __nccwpck_require__(6202)
+
+let fileContent
 
 const main = async () => {
     try {
         const prNumber = core.getInput('pr_number', { required: true })
         const token = core.getInput('token', { required: true })
+        const filePath = core.getInput('file_path', { required: true })
+        fileContent = fs.readFileSync(filePath)
         // const personalToken = core.getInput('personal_token', { required: true})
         let check
 
