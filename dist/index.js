@@ -19297,36 +19297,39 @@ const validateCve = async (data) => {
 }
 
 const cveStructureValidator = (fileContent, callback) => {
-  if (fileContent === null) {
+  if (fileContent === undefined) {
     callback(`Can not read the CVE JSON file`, undefined)
   }
 
-  const cveData = JSON.parse(fileContent)
-  validateCve(cveData)
-    .then((invalid) => {
+  try {
+    const cveData = JSON.parse(fileContent)
+    validateCve(cveData)
+      .then((invalid) => {
 
-      if (invalid) {
-        const errorMessages = invalid.map((error) => {
-          return `At path ${error.instancePath} ${error.message}`;
-        });
+        if (invalid) {
+          const errorMessages = invalid.map((error) => {
+            return `At path ${error.instancePath} ${error.message}`;
+          });
 
-        const errorMessage = errorMessages.join('\n');
-        callback(`Invalid 
+          const errorMessage = errorMessages.join('\n');
+          callback(`Invalid 
         ${errorMessage}`, undefined)
-      }
-      else {
-        callback(undefined, 'JSON validated, CVE data is in specified structure and contains all the necessary');
-      }
+        }
+        else {
+          callback(undefined, 'JSON validated, CVE data is in specified structure and contains all the necessary');
+        }
 
-    })
-    .catch(parseError => {
-      callback(parseError, undefined)
-    })
+      })
+      .catch(parseError => {
+        callback(parseError, undefined)
+      })
+  } catch (parseError) {
+    callback(parseError, undefined)
+  }
 }
+  cveStructureValidator();
 
-cveStructureValidator();
-
-module.exports = cveStructureValidator
+  module.exports = cveStructureValidator
 
 /***/ }),
 
@@ -23805,16 +23808,16 @@ const main = async () => {
     try {
         const prNumber = core.getInput('pr_number', { required: true })
         const token = core.getInput('token', { required: true })
-        // const filePath = core.getInput('file_path', { required: true })
+        const filePath = core.getInput('file_path', { required: true })
 
-        // try {
-        //     fileContent = fs.readFile(filePath, 'utf8');
-        //   } catch (error) {
+        try {
+            fileContent = fs.readFileSync(filePath, 'utf8');
+          } catch (error) {
 
-        //     console.error('Error reading file:', error);
-        //     core.setFailed('Error reading file');
-        //     return;
-        //   }
+            console.error('Error reading file:', error);
+            core.setFailed('Error reading file');
+            return;
+          }
 
         // const personalToken = core.getInput('personal_token', { required: true})
         let check
@@ -23883,16 +23886,16 @@ const main = async () => {
                     core.setFailed('File content is empty or undefined.');
                     return;
                 }
-                // else{
-                //     cveStructureValidator(fileContent, async (error, result) => {
-                //         if(error){
-                //             await createIssueComment(error)
-                //         }
-                //         else{
-                //             await createIssueComment(result)
-                //         }
-                //     })
-                // }
+                else{
+                    cveStructureValidator(fileContent, async (error, result) => {
+                        if(error){
+                            await createIssueComment(error)
+                        }
+                        else{
+                            await createIssueComment(result)
+                        }
+                    })
+                }
 
                 sendVulnerabilities(idNumber, async (res) => {
                     const responseCommentBody = `Successfully Uploaded CVE Report to MITRE test instance: ${res}`;

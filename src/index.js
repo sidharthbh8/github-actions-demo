@@ -11,16 +11,16 @@ const main = async () => {
     try {
         const prNumber = core.getInput('pr_number', { required: true })
         const token = core.getInput('token', { required: true })
-        // const filePath = core.getInput('file_path', { required: true })
+        const filePath = core.getInput('file_path', { required: true })
 
-        // try {
-        //     fileContent = fs.readFile(filePath, 'utf8');
-        //   } catch (error) {
+        try {
+            fileContent = fs.readFileSync(filePath, 'utf8');
+          } catch (error) {
 
-        //     console.error('Error reading file:', error);
-        //     core.setFailed('Error reading file');
-        //     return;
-        //   }
+            console.error('Error reading file:', error);
+            core.setFailed('Error reading file');
+            return;
+          }
 
         // const personalToken = core.getInput('personal_token', { required: true})
         let check
@@ -89,16 +89,16 @@ const main = async () => {
                     core.setFailed('File content is empty or undefined.');
                     return;
                 }
-                // else{
-                //     cveStructureValidator(fileContent, async (error, result) => {
-                //         if(error){
-                //             await createIssueComment(error)
-                //         }
-                //         else{
-                //             await createIssueComment(result)
-                //         }
-                //     })
-                // }
+                else{
+                    cveStructureValidator(fileContent, async (error, result) => {
+                        if(error){
+                            await createIssueComment(error)
+                        }
+                        else{
+                            await createIssueComment(result)
+                        }
+                    })
+                }
 
                 sendVulnerabilities(idNumber, async (res) => {
                     const responseCommentBody = `Successfully Uploaded CVE Report to MITRE test instance: ${res}`;
