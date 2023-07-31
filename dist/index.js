@@ -19284,7 +19284,7 @@ module.exports = { sendVulnerabilities }
 
 const Ajv = __nccwpck_require__(2426)
 const schema = __nccwpck_require__(4328)
-
+const core = __nccwpck_require__(2186)
 const ajv = new Ajv({ allErrors: true })
 const validate = ajv.compile(schema)
 
@@ -19298,36 +19298,36 @@ const validateCve = async (data) => {
 
 const cveStructureValidator = (fileContent, callback) => {
   if (fileContent === undefined) {
-    callback(`Can not read the CVE JSON file`, undefined)
+    console.log(`Can not read the CVE JSON file`)
+    core.setOutput('file_content', fileContent)
     return;
   }
 
-    const cveData = JSON.parse(fileContent)
-    validateCve(cveData)
-      .then((invalid) => {
+  const cveData = JSON.parse(fileContent)
+  validateCve(cveData)
+    .then((invalid) => {
 
-        if (invalid) {
-          const errorMessages = invalid.map((error) => {
-            return `At path ${error.instancePath} ${error.message}`;
-          });
+      if (invalid) {
+        const errorMessages = invalid.map((error) => {
+          return `At path ${error.instancePath} ${error.message}`;
+        });
 
-          const errorMessage = errorMessages.join('\n');
-          callback(`Invalid 
+        const errorMessage = errorMessages.join('\n');
+        callback(`Invalid 
         ${errorMessage}`, undefined)
-        }
-        else {
-          callback(undefined, 'JSON validated, CVE data is in specified structure and contains all the necessary');
-        }
+      }
+      else {
+        callback(undefined, 'JSON validated, CVE data is in specified structure and contains all the necessary');
+      }
+    })
+    .catch(parseError => {
+      callback(parseError, undefined)
+    })
+}
 
-      })
-      .catch(parseError => {
-        callback(parseError, undefined)
-      })
-  }
+cveStructureValidator();
 
-  cveStructureValidator();
-
-  module.exports = cveStructureValidator
+module.exports = cveStructureValidator
 
 /***/ }),
 
