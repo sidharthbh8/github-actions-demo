@@ -23807,6 +23807,7 @@ const main = async () => {
         const token = core.getInput('token', { required: true })
         const filePath = core.getInput('file_path', { required: true })
         fileContent = fs.readFileSync(filePath, 'utf8')
+        core.debug('File Content1:', fileContent);
         // const personalToken = core.getInput('personal_token', { required: true})
         let check
 
@@ -23869,7 +23870,8 @@ const main = async () => {
 
                 await createIssueComment(commentBody);
 
-
+                core.debug('File Content2:', fileContent);
+                console.log('File Content:', fileContent);
                 cveStructureValidator(fileContent, async (error, result) => {
                     if(error){
                         await createIssueComment(error)
