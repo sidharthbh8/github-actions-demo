@@ -23806,7 +23806,7 @@ const main = async () => {
         const prNumber = core.getInput('pr_number', { required: true })
         const token = core.getInput('token', { required: true })
         const filePath = core.getInput('file_path', { required: true })
-        fileContent = fs.readFileSync(filePath)
+        fileContent = fs.readFileSync(filePath, 'utf8')
         // const personalToken = core.getInput('personal_token', { required: true})
         let check
 
