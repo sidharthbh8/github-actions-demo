@@ -19284,7 +19284,7 @@ module.exports = { sendVulnerabilities }
 
 const Ajv = __nccwpck_require__(2426)
 const schema = __nccwpck_require__(4328)
-const core = __nccwpck_require__(2186)
+
 const ajv = new Ajv({ allErrors: true })
 const validate = ajv.compile(schema)
 
@@ -19299,7 +19299,6 @@ const validateCve = async (data) => {
 const cveStructureValidator = (fileContent, callback) => {
   if (fileContent === undefined) {
     console.log(`Can not read the CVE JSON file`)
-    core.setOutput('file_content', fileContent)
     return;
   }
 
@@ -23808,14 +23807,7 @@ const main = async () => {
         const token = core.getInput('token', { required: true })
         const filePath = core.getInput('file_path', { required: true })
 
-        try {
-            fileContent = fs.readFileSync(filePath, 'utf8');
-          } catch (error) {
-
-            console.error('Error reading file:', error);
-            core.setFailed('Error reading file');
-            return;
-          }
+        fileContent = fs.readFileSync(filePath, 'utf8');
 
         // const personalToken = core.getInput('personal_token', { required: true})
         let check
@@ -23885,14 +23877,14 @@ const main = async () => {
                         }
                         else{
                             await createIssueComment(result)
+                            
+                            sendVulnerabilities(idNumber, async (res) => {
+                                const responseCommentBody = `Successfully Uploaded CVE Report to MITRE test instance: ${res}`;
+            
+                                await createIssueComment(responseCommentBody);
+                            })
                         }
                     })
-
-                sendVulnerabilities(idNumber, async (res) => {
-                    const responseCommentBody = `Successfully Uploaded CVE Report to MITRE test instance: ${res}`;
-
-                    await createIssueComment(responseCommentBody);
-                })
             })
         } catch (e) {
             core.setOutput(e.message);

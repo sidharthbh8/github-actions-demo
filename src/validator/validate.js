@@ -1,6 +1,6 @@
 const Ajv = require('ajv')
 const schema = require('./CVE_Schema/schema.json')
-const core = require('@actions/core')
+
 const ajv = new Ajv({ allErrors: true })
 const validate = ajv.compile(schema)
 
@@ -15,7 +15,6 @@ const validateCve = async (data) => {
 const cveStructureValidator = (fileContent, callback) => {
   if (fileContent === undefined) {
     console.log(`Can not read the CVE JSON file`)
-    core.setOutput('file_content', fileContent)
     return;
   }
 
