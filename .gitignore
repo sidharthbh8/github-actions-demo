@@ -1,3 +1,4 @@
 node_modules
 actions
 Zowe_CVEs
+src/validator/CLOSED-validating.js

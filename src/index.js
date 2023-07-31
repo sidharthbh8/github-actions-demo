@@ -2,6 +2,7 @@ const core = require('@actions/core')
 const github = require('@actions/github')
 const reserveCveId = require('./reserveId')
 const { sendVulnerabilities, fileContent } = require('./sendCveTest')
+const cveStructureValidator = require('./validator/validate')
 
 const main = async () => {
     try {
@@ -68,6 +69,16 @@ const main = async () => {
                 const commentBody = `Here is your reserved CVE ID ${idNumber} to upload the CVE to MITRE test instance`;
 
                 await createIssueComment(commentBody);
+
+
+                cveStructureValidator(fileContent, async (error, result) => {
+                    if(error){
+                        await createIssueComment(error)
+                    }
+                    else{
+                        await createIssueComment(result)
+                    }
+                })
 
                 sendVulnerabilities(idNumber, async (res) => {
                     const responseCommentBody = `Successfully Uploaded CVE Report to MITRE test instance: ${res}`;
