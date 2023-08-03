@@ -23874,7 +23874,7 @@ const main = async () => {
 
                         await createIssueComment(commentBody);
 
-                        sendVulnerabilities(idNumber, async (res) => {
+                        await sendVulnerabilities(idNumber, async (res) => {
                             const responseCommentBody = `Successfully Uploaded CVE Report to MITRE test instance: ${res}`;
 
                             await createIssueComment(responseCommentBody);
