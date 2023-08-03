@@ -33,7 +33,7 @@ const sendVulnerabilities = async (reserveCveId, callback) => {
     }
 
     try {
-        const sendData = await axios.post(url, jsonData, { headers, setTimeout: 9000 })
+        const sendData = await axios.post(url, jsonData, { headers, setTimeout: 90000 })
         callback(sendData.data.message)
         // console.log(sendData.message);
 
