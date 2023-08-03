@@ -61,7 +61,7 @@
               },
               "collectionURL": { "type": "string" },
               "packageName": { "type": "string" },
-              "repo": { "type": "string" },
+              "repo": { "type": "string", "format": "uri" },
               "modules": {
                 "type": "array",
                 "items": { "type": "string" }
