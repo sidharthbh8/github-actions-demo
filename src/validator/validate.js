@@ -1,7 +1,9 @@
 const Ajv = require('ajv')
+const addformats = require('ajv-formats')
 const schema = require('./CVE_Schema/schema.json')
 
 const ajv = new Ajv({ allErrors: true })
+addformats(ajv)
 const validate = ajv.compile(schema)
 
 const validateCve = async (data) => {
