@@ -2,18 +2,18 @@ const core = require('@actions/core')
 const github = require('@actions/github')
 const fs = require('fs')
 const reserveCveId = require('./reserveId')
-const { sendVulnerabilities } = require('./sendCveTest')
+const { sendVulnerabilities, fileContent } = require('./sendCveTest')
 const cveStructureValidator = require('./validator/validate')
 
-let fileContent
+// let fileContent
 
 const main = async () => {
     try {
         const prNumber = core.getInput('pr_number', { required: true })
         const token = core.getInput('token', { required: true })
-        const filePath = core.getInput('file_path', { required: true })
+        // const filePath = core.getInput('file_path', { required: true })
 
-        fileContent = fs.readFileSync(filePath, 'utf8');
+        // fileContent = fs.readFileSync(filePath, 'utf8');
 
         // const personalToken = core.getInput('personal_token', { required: true})
         let check
@@ -72,26 +72,46 @@ const main = async () => {
         }
 
         try {
-            reserveCveId(check, number, async (idNumber) => {
-                const commentBody = `Here is your reserved CVE ID ${idNumber} to upload the CVE to MITRE test instance`;
+            cveStructureValidator(fileContent, async (error, validatedStructure) => {
+                if (error) {
+                    await createIssueComment(error)
+                }
+                else {
+                    await createIssueComment(validatedStructure)
 
-                await createIssueComment(commentBody);
+                    reserveCveId(check, number, async (idNumber) => {
+                        const commentBody = `Here is your reserved CVE ID ${idNumber} to upload the CVE to MITRE test instance`;
 
-                    cveStructureValidator(fileContent, async (error, result) => {
-                        if(error){
-                            await createIssueComment(error)
-                        }
-                        else{
-                            await createIssueComment(result)
-                            
-                            sendVulnerabilities(idNumber, async (res) => {
-                                const responseCommentBody = `Successfully Uploaded CVE Report to MITRE test instance: ${res}`;
-            
-                                await createIssueComment(responseCommentBody);
-                            })
-                        }
+                        await createIssueComment(commentBody);
+
+                        sendVulnerabilities(idNumber, async (res) => {
+                            const responseCommentBody = `Successfully Uploaded CVE Report to MITRE test instance: ${res}`;
+
+                            await createIssueComment(responseCommentBody);
+                        })
                     })
+                }
             })
+            // reserveCveId(check, number, async (idNumber) => {
+            //     const commentBody = `Here is your reserved CVE ID ${idNumber} to upload the CVE to MITRE test instance`;
+
+            //     await createIssueComment(commentBody);
+
+            //     cveStructureValidator(fileContent, async (error, result) => {
+            //         if (error) {
+            //             await createIssueComment(error)
+            //         }
+            //         else {
+            //             await createIssueComment(result)
+
+            //             sendVulnerabilities(idNumber, async (res) => {
+            //                 const responseCommentBody = `Successfully Uploaded CVE Report to MITRE test instance: ${res}`;
+
+            //                 await createIssueComment(responseCommentBody);
+            //             })
+            //         }
+            //     })
+            // })
         } catch (e) {
             core.setOutput(e.message);
         }
