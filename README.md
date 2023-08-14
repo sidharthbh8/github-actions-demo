@@ -42,4 +42,63 @@ The `reserveCveId` function is responsible for reserving a CVE ID from the MITRE
 
 The function uses the `axios` library to make HTTP requests to the MITRE test instance API. If the CVE ID is successfully reserved, the `callback` function will receive the reserved CVE ID.
 
+## Testing
+
+In this section, we'll provide an overview of the unit tests and their coverage for the different components of the whole workflow.
+
+### Unit Tests
+
+#### `reserveIdTest.test.js`
+
+This test suite covers the functionality of the `reserveCveId` logic from the `reserveId.js` file.
+
+- Test case: Should reserve a CVE ID
+- Test case: Should handle no data received
+- Test case: Should handle axios.post error
+- Test case: should handle axios.post rejection
+- Test case: should handle axios.post exception
+- Test case: should handle callback error
+- Test case: should handle invalid type for amount
+
+#### `sendCveTest.test.js`
+
+This test suite covers the functionality of the `sendVulnerabilities` logic from the `sendCveTest.js` file.
+
+- Test case: should handle null CVE ID
+- Test case: Should handle file read error
+- Test case: should handle API call success
+- Test case: Should handle API call error
+- Test case: Should handle file reading error
+- Test case: Should handle successful file reading
+- Test case: Should handle unsuccessful API call
+- Test case: should handle file reading error with core setFailed
+
+#### `validateTest.test.js`
+
+This test suite covers the functionality of the `cveStructureValidator` logic from the `validator/validate.js` file.
+
+- Test case: Should validate a basic minimum required valid JSON structur
+- Test case: Should validate a advance valid JSON structure
+- Test case: should report errors for invalid JSON structure
+- Test case: should handle undefined file content
+- Test case: should handle JSON parsing error
+- Test case: should handle validation failure
+
+#### `index.test.js`
+
+This test suite covers the overall workflow of the `main` function in the `index.js` file.
+
+- Test case: Should handle successful execution with valid description
+
+### Test Coverage
+
+Aiming for comprehensive test coverage to ensure the reliability of the codebase. Each test suite is designed to cover different scenarios and edge cases, including success and error cases. We also use mocking to isolate components and simulate different scenarios.
+
+To run the tests locally, you can use the following command:
+
+```bash
+npm test
+
+
 ### This README is a work in progress and may change as unit tests, architecture enhancements, and new features are added. Please note that the project is still under active development, and its current state may not reflect the final version.
+```
