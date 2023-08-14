@@ -38,7 +38,7 @@ const sendVulnerabilities = async (reserveCveId, callback) => {
         // console.log(sendData.message);
 
     } catch (e) {
-        core.setOutput(`Error: Failed to upload CVE data to MITRE test isntance: ${e.message}`)
+        core.setOutput(`Error: Failed to upload CVE data to MITRE test instance: ${e.message}`)
     }
 }
 
