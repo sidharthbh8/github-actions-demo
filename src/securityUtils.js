@@ -29,6 +29,7 @@ const handleCveReservationsAndUpload = async (octokit, prNumber, number) => {
 
     if (fileContent === null) {
         check = false
+        core.setOutput('File is empty')
         return;
     }
     check = true
