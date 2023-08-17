@@ -2,3 +2,5 @@ node_modules
 actions
 Zowe_CVEs
 src/validator/CLOSED-validating.js
+tests/securityUtils.test.js
+tests/thisiz.test.js
