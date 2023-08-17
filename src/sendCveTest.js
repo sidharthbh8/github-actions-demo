@@ -33,12 +33,12 @@ const sendVulnerabilities = async (reserveCveId, callback) => {
     }
 
     try {
-        const sendData = await axios.post(url, jsonData, { headers, setTimeout: 9000 })
+        const sendData = await axios.post(url, jsonData, { headers, setTimeout: 90000 })
         callback(sendData.data.message)
         // console.log(sendData.message);
 
     } catch (e) {
-        core.setOutput(`Error: Failed to upload CVE data to MITRE test isntance: ${e.message}`)
+        core.setOutput(`Error: Failed to upload CVE data to MITRE test instance: ${e.message}`)
     }
 }
 

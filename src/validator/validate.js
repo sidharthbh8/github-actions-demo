@@ -1,10 +1,11 @@
 const Ajv = require('ajv')
+const addformats = require('ajv-formats')
 const schema = require('./CVE_Schema/schema.json')
 
-const ajv = new Ajv({ allErrors: true })
-const validate = ajv.compile(schema)
-
 const validateCve = async (data) => {
+  const ajv = new Ajv({ allErrors: true })
+  addformats(ajv)
+  const validate = ajv.compile(schema)
   const isValid = await validate(data)
   if (!isValid) {
     return (validate.errors);
@@ -13,9 +14,8 @@ const validateCve = async (data) => {
 }
 
 const cveStructureValidator = (fileContent, callback) => {
-  if (fileContent === undefined) {
-    console.log(`Can not read the CVE JSON file`)
-    return;
+  if (typeof(fileContent) === 'undefined') {
+    return(`Can not read the CVE JSON file`)
   }
 
   const cveData = JSON.parse(fileContent)
@@ -28,15 +28,14 @@ const cveStructureValidator = (fileContent, callback) => {
         });
 
         const errorMessage = errorMessages.join('\n');
-        callback(`Invalid 
-        ${errorMessage}`, undefined)
+        callback(`Invalid\n ${errorMessage}`, undefined)
       }
       else {
         callback(undefined, 'JSON validated, CVE data is in specified structure and contains all the necessary');
       }
     })
     .catch(parseError => {
-      callback(parseError, undefined)
+      callback(parseError.message, undefined)
     })
 }
 
