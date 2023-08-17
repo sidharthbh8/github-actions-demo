@@ -59,4 +59,4 @@ const handleCveReservationsAndUpload = async (octokit, prNumber, number) => {
     }
 }
 
-module.exports = { vulnerabilitiesCount, createIssueComment, handleCveReservationsAndUpload }
+module.exports = { vulnerabilitiesCount, handleCveReservationsAndUpload }
