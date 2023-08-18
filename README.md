@@ -16,7 +16,9 @@ To use this workflow in your repository, follow these steps:
 
 The src consists of the following files:
 
-- `index.js`: The main script that orchestrates the CVE upload process. It validates the JSON data, reserves a CVE ID, and uploads the CVE file to the MITRE test instance.
+- `index.js`: The main script that throws a greetings message and extract the cve form `data.json` file. It leverage the functions form securityUtils to process the upload of CVEs.
+
+- `securityUtils.js`: A helper script that extracts vulneribilites that needs to be reported, validates the JSON data, reserves a CVE ID, and uploads the CVE file to the MITRE test instance.
 
 - `reserveId.js`: A helper script to reserve a CVE ID from the MITRE test instance API.
 
@@ -45,10 +47,11 @@ The function uses the `axios` library to make HTTP requests to the MITRE test in
 ## Testing
 
 In this section, we'll provide an overview of the unit tests and their coverage for the different components of the whole workflow.
+The tests for this project can be found in the [tests](./tests/) directory.
 
 ### Unit Tests
 
-#### `reserveIdTest.test.js`
+#### [reserveIdTest.test.js](./tests/reserveId.test.js)
 
 This test suite covers the functionality of the `reserveCveId` logic from the `reserveId.js` file.
 
@@ -60,7 +63,7 @@ This test suite covers the functionality of the `reserveCveId` logic from the `r
 - Test case: should handle callback error
 - Test case: should handle invalid type for amount
 
-#### `sendCveTest.test.js`
+#### [sendCveTest.test.js](./tests/sendCveTest.test.js)
 
 This test suite covers the functionality of the `sendVulnerabilities` logic from the `sendCveTest.js` file.
 
@@ -73,7 +76,7 @@ This test suite covers the functionality of the `sendVulnerabilities` logic from
 - Test case: Should handle unsuccessful API call
 - Test case: should handle file reading error with core setFailed
 
-#### `validateTest.test.js`
+#### [jsonSchema.test.js](./tests/jsonSchema.test.js)
 
 This test suite covers the functionality of the `cveStructureValidator` logic from the `validator/validate.js` file.
 
@@ -84,11 +87,17 @@ This test suite covers the functionality of the `cveStructureValidator` logic fr
 - Test case: should handle JSON parsing error
 - Test case: should handle validation failure
 
-#### `index.test.js`
+#### [index.test.js](./tests/index.test.js)
 
 This test suite covers the overall workflow of the `main` function in the `index.js` file.
 
 - Test case: Should handle successful execution with valid description
+
+### Integration Tests
+
+Please note that due to the complexity and requirements of interacting with external services like GitHub and Mitre, full end-to-end integration tests against live instances are not currently part of the test suite. These tests would involve actions like creating PRs, verifying comments, and reserving IDs on Mitre's test instance.
+
+While we understand the value of such tests, the logistics of setting up and maintaining separate instances and the time constraints prevent us from implementing them fully at this time. As a result, the integration tests included in the test suite may involve mocked behavior to simulate interactions with these services.
 
 ### Test Coverage
 
