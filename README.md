@@ -12,6 +12,9 @@ To use this workflow in your repository, follow these steps:
 
 3. Push the changes to your repository, and the workflow will be triggered automatically whenever a Pull Request is opened or reopened on the `master` branch. You can also manually trigger the workflow from the Actions tab.
 
+## Workflow Architecture
+![CVE Automation Workflow Architecture](https://i.imgur.com/J3larnA.jpg)
+
 ## Project Structure
 
 The src consists of the following files:
