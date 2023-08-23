@@ -20766,7 +20766,7 @@ const handleCveReservationsAndUpload = async (number) => {
     }
 }
 
-module.exports = { vulnerabilitiesCount, handleCveReservationsAndUpload }
+module.exports = { vulnerabilitiesCount, handleCveReservationsAndUpload, createIssueComment }
 
 /***/ }),
 
