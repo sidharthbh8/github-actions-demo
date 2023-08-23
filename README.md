@@ -1,6 +1,6 @@
 # CVE Reports Publication Automation
 
-CVE Upload Automation is a GitHub Actions workflow that automates the process of reserving and uploading Common Vulnerabilities and Exposures (CVE) reports to the MITRE test instance. It validates the JSON data provided in the `data.json` file, reserves a CVE ID, and then pushes the CVE file with the reserved ID to the MITRE test instance. Additionally, it sends the link to the user as a comment in the Pull Request (PR) that triggered the workflow.
+CVE Reports Publication Automation is a pipeline project for [Zowe](https://github.com/zowe). In order to automate and streamline the process of Common Vulnerabilities and Exposures (CVE) publication using GitHub Actions workflow to the MITRE test instance. It validates the JSON data provided in the `data.json` file, reserves a CVE ID, and then pushes the CVE file with the reserved ID to the MITRE test instance. Additionally, it sends the link to the user as a comment in the Pull Request (PR) that triggered the workflow.
 
 ## How to Use
 
@@ -54,7 +54,7 @@ The tests for this project can be found in the [tests](./tests/) directory.
 
 ### Unit Tests
 
-#### [reserveIdTest.test.js](./tests/reserveId.test.js)
+### [reserveIdTest.test.js](./tests/reserveId.test.js)
 
 This test suite covers the functionality of the `reserveCveId` logic from the `reserveId.js` file.
 
@@ -66,7 +66,7 @@ This test suite covers the functionality of the `reserveCveId` logic from the `r
 - Test case: should handle callback error
 - Test case: should handle invalid type for amount
 
-#### [sendCveTest.test.js](./tests/sendCveTest.test.js)
+### [sendCveTest.test.js](./tests/sendCveTest.test.js)
 
 This test suite covers the functionality of the `sendVulnerabilities` logic from the `sendCveTest.js` file.
 
@@ -79,7 +79,7 @@ This test suite covers the functionality of the `sendVulnerabilities` logic from
 - Test case: Should handle unsuccessful API call
 - Test case: should handle file reading error with core setFailed
 
-#### [jsonSchema.test.js](./tests/jsonSchema.test.js)
+### [jsonSchema.test.js](./tests/jsonSchema.test.js)
 
 This test suite covers the functionality of the `cveStructureValidator` logic from the `validator/validate.js` file.
 
@@ -90,7 +90,7 @@ This test suite covers the functionality of the `cveStructureValidator` logic fr
 - Test case: should handle JSON parsing error
 - Test case: should handle validation failure
 
-#### [index.test.js](./tests/index.test.js)
+### [index.test.js](./tests/index.test.js)
 
 This test suite covers the overall workflow of the `main` function in the `index.js` file.
 
@@ -108,9 +108,19 @@ Aiming for comprehensive test coverage to ensure the reliability of the codebase
 
 To run the tests locally, you can use the following command:
 
-```bash
+```
 npm test
 ```
+## Building CVE Reports Publication Automation from Source
 
-### This README is a work in progress and may change as unit tests, architecture enhancements, and new features are added. Please note that the project is still under active development, and its current state may not reflect the final version.
+The first time you download the project from GitHub repository, issue the following command to install the dependencies and several development tools:
 
+```
+npm install
+```
+
+To build your code changes, issue the following command:
+
+```
+npm run build
+```
