@@ -272,6 +272,5 @@
       "required": ["problemTypes", "affected", "descriptions", "references"]
     }
   },
-  "required": ["cnaContainer"],
-  "additionalProperties": true
+  "required": ["cnaContainer"]
 }
